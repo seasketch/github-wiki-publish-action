@@ -44,6 +44,7 @@ debug "Checking out wiki repository"
 tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
 (
     cd "$tmp_dir" || exit 1
+    git config --global init.defaultBranch master
     git init
     git config user.name "$GITHUB_ACTOR"
     git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
@@ -56,7 +57,6 @@ rsync -avzr --delete --exclude='.git/' "$1" "$tmp_dir" || exit 1
 debug "Committing and pushing changes"
 (
     cd "$tmp_dir" || exit 1
-    git config --global init.defaultBranch master
     git config --global --add safe.directory "$tmp_dir"
     git add .
     git commit -m "$WIKI_COMMIT_MESSAGE"
